@@ -113,7 +113,7 @@ const App = () => {
           {currentAccount === "" ? (
             renderNotConnectedContainer()
           ) : (
-            <button onClick={null} className="cta-button connect-wallet-button">
+            <button onClick={askContractToMintNft} className="cta-button connect-wallet-button">
               Mint NFT
             </button>
           )}
