@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import './styles/App.css';
 import twitterLogo from './assets/twitter-logo.svg';
+import { ethers } from "ethers";
+import myEpicNft from './utils/MyEpicNFT.json';
+
 
 const TWITTER_HANDLE = '_buildspace';
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
@@ -57,6 +60,32 @@ const App = () => {
     } catch (error) {
       console.log(error)
     }
+  }
+
+  const askContractToMintNft = async () => {
+    const CONTRACT_ADDRESS = "0xe8E99c072D4C64843E7AAa21180143Fa2204F166";
+      try {
+        const { ethereum } = window;
+  
+        if (ethereum) {
+          const provider = new ethers.providers.Web3Provider(ethereum);
+          const signer = provider.getSigner();
+          const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, myEpicNft.abi, signer);
+  
+          console.log("Going to pop wallet now to pay gas...")
+          let nftTxn = await connectedContract.makeAnEpicNFT();
+  
+          console.log("Mining...please wait.")
+          await nftTxn.wait();
+          
+          console.log(`Mined, see transaction: https://rinkeby.etherscan.io/tx/${nftTxn.hash}`);
+  
+        } else {
+          console.log("Ethereum object doesn't exist!");
+        }
+      } catch (error) {
+        console.log(error)
+      }
   }
 
   // Render Methods
